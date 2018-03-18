@@ -1,0 +1,7 @@
+PyMySQL==0.7.11
+aiohttp==2.2.5
+aiohttp-jinja2==0.14.0
+aiohttp-security==0.1.1
+aiohttp-session==1.0.1
+async-timeout==2.0.0
+asyncio==3.4.3
