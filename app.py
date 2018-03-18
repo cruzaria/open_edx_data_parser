@@ -30,47 +30,52 @@ connection = pymysql.connect(
 )
 
 
-def auth(handler):
-    def handler_wrapper(request: web.Request):
-        print("USER_TOKEN ", USER_TOKEN)
-        if 'TOKEN' in request.cookies.keys():
-            if request.cookies['TOKEN'] == USER_TOKEN:
-                handler(request)
-            else:
-                response = aiohttp_jinja2.render_template('login.jinja2', request, {})
-                response.headers['Content-Language'] = 'ru'
-                return response
-        else:
-            response = aiohttp_jinja2.render_template('login.jinja2', request, {})
-            response.headers['Content-Language'] = 'ru'
-            return response
-    return handler_wrapper
+# def auth(handler):
+#     def handler_wrapper(request: web.Request):
+#         print("USER_TOKEN ", USER_TOKEN)
+#         if 'TOKEN' in request.cookies.keys():
+#             if request.cookies['TOKEN'] == USER_TOKEN:
+#                 handler(request)
+#             else:
+#                 response = aiohttp_jinja2.render_template('login.jinja2', request, {})
+#                 response.headers['Content-Language'] = 'ru'
+#                 return response
+#         else:
+#             response = aiohttp_jinja2.render_template('login.jinja2', request, {})
+#             response.headers['Content-Language'] = 'ru'
+#             return response
+#     return handler_wrapper
 
 
-@auth
 async def get_enrollment_data(request):
-    try:
-        with connection.cursor() as cursor:
-            sql = "SELECT `sc.id` AS `id`," \
-                  "`sc.course_id` AS `course_id`," \
-                  "`sc.created` AS `create_date`," \
-                  "`au.username` AS `username`," \
-                  "`au.first_name` AS `first_name`," \
-                  "`au.last_name` AS `last_name`," \
-                  "`au.email` AS `email`" \
-                  "FROM `student_courseenrollment` AS `sc`" \
-                  "INNER JOIN `auth_user` AS `au`" \
-                  "ON `sc.user_id` = `au.id`"
-            cursor.execute(sql)
-            result = cursor.fetchall()
-            result = object_to_text(result)
-            filename = f"{datetime.now().strftime('%d%M%Y_%H%m')}.txt"
-            with open(os.path.join('/data', filename), 'w') as f:
-                f.write(result)
-                f.close()
-            return web.Response(body=open(os.path.join('/data', filename), 'rb').read())
-    finally:
-        connection.close()
+    if 'TOKEN' in request.cookies.keys():
+        if request.cookies['TOKEN'] == USER_TOKEN:
+            try:
+                with connection.cursor() as cursor:
+                    sql = "SELECT `sc.id` AS `id`," \
+                          "`sc.course_id` AS `course_id`," \
+                          "`sc.created` AS `create_date`," \
+                          "`au.username` AS `username`," \
+                          "`au.first_name` AS `first_name`," \
+                          "`au.last_name` AS `last_name`," \
+                          "`au.email` AS `email`" \
+                          "FROM `student_courseenrollment` AS `sc`" \
+                          "INNER JOIN `auth_user` AS `au`" \
+                          "ON `sc.user_id` = `au.id`"
+                    cursor.execute(sql)
+                    result = cursor.fetchall()
+                    result = object_to_text(result)
+                    filename = f"{datetime.now().strftime('%d%M%Y_%H%m')}.txt"
+                    with open(os.path.join('/data', filename), 'w') as f:
+                        f.write(result)
+                        f.close()
+                    return web.Response(body=open(os.path.join('/data', filename), 'rb').read())
+            finally:
+                connection.close()
+
+    response = aiohttp_jinja2.render_template('login.jinja2', request, {})
+    response.headers['Content-Language'] = 'ru'
+    return response
 
 
 async def authorization(request: web.Request):
@@ -85,9 +90,13 @@ async def authorization(request: web.Request):
     return web.Response(body="{'result': False}")
 
 
-@auth
 async def admin_panel(request: web.Request):
-    response = aiohttp_jinja2.render_template('admin.jinja2', request, {})
+    if 'TOKEN' in request.cookies.keys():
+        if request.cookies['TOKEN'] == USER_TOKEN:
+            response = aiohttp_jinja2.render_template('admin.jinja2', request, {})
+            response.headers['Content-Language'] = 'ru'
+            return response
+    response = aiohttp_jinja2.render_template('login.jinja2', request, {})
     response.headers['Content-Language'] = 'ru'
     return response
 
