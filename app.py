@@ -9,7 +9,7 @@ from utils import object_to_text
 
 config = {
     'host': os.environ['OE_MYSQL_HOST'],
-    'user': os.environ['EO_MYSQL_USER'],
+    'user': os.environ['OE_MYSQL_USER'],
     'pass': os.environ['OE_MYSQL_PASS'],
     'db': os.environ['OE_MYSQL_DB']
 }
