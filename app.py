@@ -35,15 +35,15 @@ async def get_enrollment_data(request):
         if request.cookies['TOKEN'] == USER_TOKEN:
             try:
                 with connection.cursor() as cursor:
-                    sql = "SELECT sc.id AS id," \
-                          "sc.course_id AS course_id," \
-                          "sc.created AS create_date," \
-                          "au.username AS username," \
-                          "au.first_name AS first_name," \
-                          "au.last_name AS last_name," \
-                          "au.email AS email" \
-                          "FROM student_courseenrollment AS sc" \
-                          "INNER JOIN auth_user AS au" \
+                    sql = "SELECT sc.id AS id, " \
+                          "sc.course_id AS course_id, " \
+                          "sc.created AS create_date, " \
+                          "au.username AS username, " \
+                          "au.first_name AS first_name, " \
+                          "au.last_name AS last_name, " \
+                          "au.email AS email " \
+                          "FROM student_courseenrollment AS sc " \
+                          "INNER JOIN auth_user AS au " \
                           "ON sc.user_id = au.id"
                     cursor.execute(sql)
                     result = cursor.fetchall()
