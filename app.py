@@ -11,7 +11,8 @@ config = {
     'host': os.environ['OE_MYSQL_HOST'],
     'user': os.environ['OE_MYSQL_USER'],
     'pass': os.environ['OE_MYSQL_PASS'],
-    'db': os.environ['OE_MYSQL_DB']
+    'db': os.environ['OE_MYSQL_DB'],
+    'token': os.environ['OE_TOKEN']
 }
 
 
@@ -41,11 +42,29 @@ async def get_enrollment_data(request):
         connection.close()
 
 
+async def admin_panel(request: web.Request):
+    json = await request.json()
+    token = json['token']
+    if token:
+        if token == config['token']:
+            return web.json_response({'result': True})
+        else:
+            return web.json_response({'result': False})
+    else:
+        if request.cookies['TOKEN']:
+            if request.cookies['TOKEN'] == config['token']:
+                return web.Response(text=os.path.join('./pages', 'admin.html'))
+
+        return web.Response(text=os.path.join('./pages', 'login.html'))
+
+
+
 def app(l=None):
     loop = l or asyncio.get_event_loop()
     app = web.Application(loop=loop)
 
-    app.router.add_get('/admin/enrollment_data', get_enrollment_data)
+    app.router.add_get('/admin-panel', admin_panel)
+    app.router.add_get('/admin-panel/admin/enrollment_data', get_enrollment_data)
 
     return app
 

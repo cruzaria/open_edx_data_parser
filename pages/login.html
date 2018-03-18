@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Авторизация</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+</head>
+<body>
+<h2>Добро пожаловать в панель администратора платформы edx!</h2>
+<p>Пожалуйста, авторизуйтесь</p>
+<form onsubmit="sendToken(event)">
+    <input type="password" id="token" placeholder="token">
+    <button type="submit">Войти</button>
+</form>
+</body>
+
+
+<script type="text/javascript">
+    function sendToken(e){
+        e.preventDefault();
+        $.ajax({
+            url: '/admin-panel',
+            dataType: 'json',
+            type: 'post',
+            contentType: "application/json; charset=UTF-8",
+            data: JSON.stringify({
+                "token": document.getElementById('token').value
+            }),
+            processData: false,
+            success: function (result) {
+                if (result){
+                    if (result.result)
+                        window.location = '/admin-panel';
+                    else
+                        alert('Неверный токен!')
+                }
+            }
+        })
+    }
+</script>
+</html>
