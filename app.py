@@ -81,8 +81,8 @@ async def authorization(request: web.Request):
             headers = {
                 'Set-Cookie': f'TOKEN={USER_TOKEN}'
             }
-            return web.json_response({'result': True})
-    return web.json_response({'result': False})
+            return web.Response(body={'result': True}, headers=headers)
+    return web.Response(body={'result': False})
 
 
 @auth
