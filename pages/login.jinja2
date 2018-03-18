@@ -19,7 +19,7 @@
     function sendToken(e){
         e.preventDefault();
         $.ajax({
-            url: '/admin-panel/',
+            url: '/admin-panel/auth',
             dataType: 'json',
             type: 'post',
             contentType: "application/json; charset=UTF-8",
