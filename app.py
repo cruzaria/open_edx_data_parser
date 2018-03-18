@@ -4,6 +4,7 @@ import pymysql
 import os
 from datetime import datetime
 import aiohttp_jinja2
+import jinja2
 
 from utils import object_to_text
 
@@ -32,7 +33,7 @@ def auth(handler):
         if 'TOKEN' in request.cookies.keys():
             if request.cookies['TOKEN'] == config['token']:
                 handler(request)
-        response = aiohttp_jinja2.render_template('./pages/login.jinja2', request, {})
+        response = aiohttp_jinja2.render_template('login.jinja2', request, {})
         response.headers['Content-Language'] = 'ru'
         return response
     return handler_wrapper
@@ -74,7 +75,7 @@ async def admin_panel(request: web.Request):
         else:
             return web.json_response({'result': False})
     else:
-        response = aiohttp_jinja2.render_template('./pages/admin.jinja2', request, {})
+        response = aiohttp_jinja2.render_template('admin.jinja2', request, {})
         response.headers['Content-Language'] = 'ru'
         return response
 
@@ -92,6 +93,7 @@ def app(l=None):
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     app = app(loop)
+    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('./pages'))
     handler = app.make_handler()
     f = loop.create_server(handler, '0.0.0.0', 8899)
     srv = loop.run_until_complete(f)
