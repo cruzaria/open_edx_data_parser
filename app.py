@@ -8,10 +8,10 @@ from utils import object_to_text
 
 
 config = {
-    'host': os.environ['MYSQL_HOST'],
-    'user': os.environ['MYSQL_USER'],
-    'pass': os.environ['MYSQL_PASS'],
-    'db': os.environ['MYSQL_DB']
+    'host': os.environ['OE_MYSQL_HOST'],
+    'user': os.environ['EO_MYSQL_USER'],
+    'pass': os.environ['OE_MYSQL_PASS'],
+    'db': os.environ['OE_MYSQL_DB']
 }
 
 
