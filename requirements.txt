@@ -5,4 +5,5 @@ aiohttp-security==0.1.1
 aiohttp-session==1.0.1
 async-timeout==2.0.0
 asyncio==3.4.3
+pytz==2017.2
 yarl==0.18.0

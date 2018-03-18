@@ -1,5 +1,6 @@
 import random
 from datetime import datetime
+import pytz
 
 
 def object_to_text(arr: list, add_date=False):
@@ -30,7 +31,7 @@ def object_to_text(arr: list, add_date=False):
         result = f"{result}\n"
 
     if add_date:
-        result = f"{datetime.now().strftime('%d%M%Y_%H%m')}\n{result}"
+        result = f"{datetime.now(tz=pytz.timezone('Europe/Moscow')).strftime('%d.%M.%Y %H:%m')}\n{result}"
 
     return result
 

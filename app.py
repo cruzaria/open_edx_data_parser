@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 import aiohttp_jinja2
 import jinja2
+import pytz
 
 from utils import object_to_text, random_token
 
@@ -48,7 +49,7 @@ async def get_enrollment_data(request):
                     cursor.execute(sql)
                     result = cursor.fetchall()
                     result = object_to_text(result, add_date=True)
-                    filename = f"{datetime.now().strftime('%d%M%Y_%H%m')}.txt"
+                    filename = f"{datetime.now(tz=pytz.timezone('Europe/Moscow')).strftime('%d%M%Y_%H%m')}.txt"
                     with open(os.path.join('/data', filename), 'w') as f:
                         f.write(result)
                         f.close()
