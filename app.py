@@ -31,7 +31,7 @@ async def auth(handler):
     async def handler_wrapper(request: web.Request):
         if request.cookies['TOKEN']:
             if request.cookies['TOKEN'] == config['token']:
-                handler(request)
+                await handler(request)
         response = aiohttp_jinja2.render_template('./pages/login.jinja2', request, {})
         response.headers['Content-Language'] = 'ru'
         return response
