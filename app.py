@@ -49,7 +49,7 @@ async def get_enrollment_data(request):
                     cursor.execute(sql)
                     result = cursor.fetchall()
                     result = object_to_text(result, add_date=True)
-                    filename = f"{datetime.now(tz=pytz.timezone('Europe/Moscow')).strftime('%d%M%Y_%H%m')}.txt"
+                    filename = f"{datetime.now(tz=pytz.timezone('Europe/Moscow')).strftime('%d%m%Y_%H%M')}.txt"
                     with open(os.path.join('/data', filename), 'w') as f:
                         f.write(result)
                         f.close()
