@@ -29,7 +29,7 @@ connection = pymysql.connect(
 
 def auth(handler):
     def handler_wrapper(request: web.Request):
-        if request.cookies['TOKEN']:
+        if 'TOKEN' in request.cookies.keys():
             if request.cookies['TOKEN'] == config['token']:
                 handler(request)
         response = aiohttp_jinja2.render_template('./pages/login.jinja2', request, {})
