@@ -65,19 +65,20 @@ async def get_enrollment_data(request):
         connection.close()
 
 
-@auth
-async def admin_panel(request: web.Request):
+async def authorization(request: web.Request):
     json = await request.json()
     token = json['token']
     if token:
         if token == config['token']:
             return web.json_response({'result': True})
-        else:
-            return web.json_response({'result': False})
-    else:
-        response = aiohttp_jinja2.render_template('admin.jinja2', request, {})
-        response.headers['Content-Language'] = 'ru'
-        return response
+    return web.json_response({'result': False})
+
+
+@auth
+async def admin_panel(request: web.Request):
+    response = aiohttp_jinja2.render_template('admin.jinja2', request, {})
+    response.headers['Content-Language'] = 'ru'
+    return response
 
 
 def app(l=None):
@@ -85,7 +86,7 @@ def app(l=None):
     app = web.Application(loop=loop)
 
     app.router.add_get('/', admin_panel)
-    app.router.add_post('/', admin_panel)
+    app.router.add_post('/auth', authorization)
     app.router.add_get('/admin/enrollment_data', get_enrollment_data)
 
     return app
