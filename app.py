@@ -26,6 +26,17 @@ connection = pymysql.connect(
 )
 
 
+async def auth(handler):
+    async def handler_wrapper(request: web.Request):
+        if request.cookies['TOKEN']:
+            if request.cookies['TOKEN'] == config['token']:
+                handler(request)
+        page = open(os.path.join('./pages', 'login.html'), 'r').read()
+        return web.Response(text=page)
+    return handler_wrapper
+
+
+@auth
 async def get_enrollment_data(request):
     try:
         with connection.cursor() as cursor:
@@ -37,11 +48,12 @@ async def get_enrollment_data(request):
             with open(os.path.join('/data', filename), 'w') as f:
                 f.write(result)
                 f.close()
-            return web.FileResponse(os.path.join('/data', filename))
+            return web.FileResponse(open(os.path.join('/data', filename), 'r'))
     finally:
         connection.close()
 
 
+@auth
 async def admin_panel(request: web.Request):
     json = await request.json()
     token = json['token']
@@ -51,12 +63,8 @@ async def admin_panel(request: web.Request):
         else:
             return web.json_response({'result': False})
     else:
-        if request.cookies['TOKEN']:
-            if request.cookies['TOKEN'] == config['token']:
-                return web.Response(text=os.path.join('./pages', 'admin.html'))
-
-        return web.Response(text=os.path.join('./pages', 'login.html'))
-
+        page = open(os.path.join('./pages', 'admin.html'), 'r').read()
+        return web.Response(text=page)
 
 
 def app(l=None):
