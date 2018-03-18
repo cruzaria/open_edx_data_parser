@@ -32,12 +32,18 @@ connection = pymysql.connect(
 
 def auth(handler):
     def handler_wrapper(request: web.Request):
+        print("USER_TOKEN ", USER_TOKEN)
         if 'TOKEN' in request.cookies.keys():
             if request.cookies['TOKEN'] == USER_TOKEN:
                 handler(request)
-        response = aiohttp_jinja2.render_template('login.jinja2', request, {})
-        response.headers['Content-Language'] = 'ru'
-        return response
+            else:
+                response = aiohttp_jinja2.render_template('login.jinja2', request, {})
+                response.headers['Content-Language'] = 'ru'
+                return response
+        else:
+            response = aiohttp_jinja2.render_template('login.jinja2', request, {})
+            response.headers['Content-Language'] = 'ru'
+            return response
     return handler_wrapper
 
 

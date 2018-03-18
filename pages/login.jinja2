@@ -29,11 +29,13 @@
             processData: false,
             success: function (result) {
                 if (result){
-                    if (result.result)
+                    if (result.result){
                         window.location = '/admin-panel/';
+                    }
                     else
                         alert('Неверный токен!')
-                }
+                } else
+                    alert('Неверный токен!')
             }
         })
     }
