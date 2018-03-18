@@ -93,7 +93,7 @@ def app(l=None):
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     app = app(loop)
-    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('./pages'))
+    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('/app/pages'))
     handler = app.make_handler()
     f = loop.create_server(handler, '0.0.0.0', 8899)
     srv = loop.run_until_complete(f)
