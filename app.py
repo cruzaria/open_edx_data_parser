@@ -3,6 +3,7 @@ from aiohttp import web
 import pymysql
 import os
 from datetime import datetime
+import aiohttp_jinja2
 
 from utils import object_to_text
 
@@ -31,8 +32,9 @@ async def auth(handler):
         if request.cookies['TOKEN']:
             if request.cookies['TOKEN'] == config['token']:
                 handler(request)
-        page = open(os.path.join('./pages', 'login.html'), 'r').read()
-        return web.Response(text=page)
+        response = aiohttp_jinja2.render_template('./pages/login.jinja2', request, {})
+        response.headers['Content-Language'] = 'ru'
+        return response
     return handler_wrapper
 
 
@@ -40,7 +42,16 @@ async def auth(handler):
 async def get_enrollment_data(request):
     try:
         with connection.cursor() as cursor:
-            sql = "SELECT `sc.id` AS `id`, `sc.course_id` AS `course_id`, `sc.created` AS `create_date`, `au.username` AS `username`, `au.first_name` AS `first_name`, `au.last_name` AS `last_name`, `au.email` AS `email` FROM `student_courseenrollment` AS `sc` INNER JOIN `auth_user` AS `au` ON `sc.user_id` = `au.id`"
+            sql = "SELECT `sc.id` AS `id`," \
+                  "`sc.course_id` AS `course_id`," \
+                  "`sc.created` AS `create_date`," \
+                  "`au.username` AS `username`," \
+                  "`au.first_name` AS `first_name`," \
+                  "`au.last_name` AS `last_name`," \
+                  "`au.email` AS `email`" \
+                  "FROM `student_courseenrollment` AS `sc`" \
+                  "INNER JOIN `auth_user` AS `au`" \
+                  "ON `sc.user_id` = `au.id`"
             cursor.execute(sql)
             result = cursor.fetchall()
             result = object_to_text(result)
@@ -48,7 +59,7 @@ async def get_enrollment_data(request):
             with open(os.path.join('/data', filename), 'w') as f:
                 f.write(result)
                 f.close()
-            return web.FileResponse(open(os.path.join('/data', filename), 'r'))
+            return web.Response(body=open(os.path.join('/data', filename), 'rb').read())
     finally:
         connection.close()
 
@@ -63,8 +74,9 @@ async def admin_panel(request: web.Request):
         else:
             return web.json_response({'result': False})
     else:
-        page = open(os.path.join('./pages', 'admin.html'), 'r').read()
-        return web.Response(text=page)
+        response = aiohttp_jinja2.render_template('./pages/admin.jinja2', request, {})
+        response.headers['Content-Language'] = 'ru'
+        return response
 
 
 def app(l=None):
