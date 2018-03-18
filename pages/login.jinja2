@@ -27,8 +27,13 @@
                 "token": document.getElementById('token').value
             }),
             processData: false,
-            success: function (result) {
-                window.location = '/admin-panel/';
+            statusCode: {
+                200: function(result){
+                    window.location = '/admin-panel/';
+                }
+            },
+            error: function(err){
+                alert('Неверный токен!')
             }
         })
     }
