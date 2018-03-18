@@ -10,4 +10,4 @@ RUN cd /app && \
 
 EXPOSE 8899
 
-ENTRYPOINT ["python", "/app/app.py"]
+ENTRYPOINT ["python3", "/app/app.py"]
