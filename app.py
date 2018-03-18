@@ -47,7 +47,7 @@ async def get_enrollment_data(request):
                           "ON sc.user_id = au.id"
                     cursor.execute(sql)
                     result = cursor.fetchall()
-                    result = object_to_text(result)
+                    result = object_to_text(result, add_date=True)
                     filename = f"{datetime.now().strftime('%d%M%Y_%H%m')}.txt"
                     with open(os.path.join('/data', filename), 'w') as f:
                         f.write(result)

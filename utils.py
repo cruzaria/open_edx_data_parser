@@ -1,7 +1,8 @@
 import random
+from datetime import datetime
 
 
-def object_to_text(arr: list):
+def object_to_text(arr: list, add_date=False):
     lengths = {}
     line = ''
 
@@ -27,6 +28,9 @@ def object_to_text(arr: list):
         for key in arr[0].keys():
             result = f"{result}{str(item[key])}{' ' * (lengths[key] - len(str(item[key])))}|"
         result = f"{result}\n"
+
+    if add_date:
+        result = f"{datetime.now().strftime('%d%M%Y_%H%m')}\n{result}"
 
     return result
 
