@@ -83,8 +83,8 @@ def app(l=None):
     loop = l or asyncio.get_event_loop()
     app = web.Application(loop=loop)
 
-    app.router.add_get('/admin-panel', admin_panel)
-    app.router.add_get('/admin-panel/admin/enrollment_data', get_enrollment_data)
+    app.router.add_get('/', admin_panel)
+    app.router.add_get('/admin/enrollment_data', get_enrollment_data)
 
     return app
 
