@@ -1,3 +1,6 @@
+import random
+
+
 def object_to_text(arr: list):
     lengths = {}
     line = ''
@@ -26,3 +29,11 @@ def object_to_text(arr: list):
         result = f"{result}\n"
 
     return result
+
+
+def random_token(len: int):
+    dictionary = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'
+    token = ''
+    for num in range(len):
+        token = f"{token}{dictionary[random.randrange(0, 62, 1)]}"
+    return token

@@ -6,8 +6,10 @@ from datetime import datetime
 import aiohttp_jinja2
 import jinja2
 
-from utils import object_to_text
+from utils import object_to_text, random_token
 
+
+USER_TOKEN = random_token(16)
 
 config = {
     'host': os.environ['OE_MYSQL_HOST'],
@@ -31,7 +33,7 @@ connection = pymysql.connect(
 def auth(handler):
     def handler_wrapper(request: web.Request):
         if 'TOKEN' in request.cookies.keys():
-            if request.cookies['TOKEN'] == config['token']:
+            if request.cookies['TOKEN'] == USER_TOKEN:
                 handler(request)
         response = aiohttp_jinja2.render_template('login.jinja2', request, {})
         response.headers['Content-Language'] = 'ru'
@@ -70,6 +72,9 @@ async def authorization(request: web.Request):
     token = json['token']
     if token:
         if token == config['token']:
+            headers = {
+                'Set-Cookie': f'TOKEN={USER_TOKEN}'
+            }
             return web.json_response({'result': True})
     return web.json_response({'result': False})
 
