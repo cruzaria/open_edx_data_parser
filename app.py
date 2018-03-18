@@ -85,6 +85,7 @@ def app(l=None):
     app = web.Application(loop=loop)
 
     app.router.add_get('/', admin_panel)
+    app.router.add_post('/', admin_panel)
     app.router.add_get('/admin/enrollment_data', get_enrollment_data)
 
     return app
