@@ -54,8 +54,8 @@ async def get_enrollment_data(request):
                         f.write(result)
                         f.close()
                     return web.Response(body=open(os.path.join('/data', filename), 'rb').read())
-            finally:
-                connection.close()
+            except Exception as e:
+                web.Response(body=str(e))
 
     response = aiohttp_jinja2.render_template('login.jinja2', request, {})
     response.headers['Content-Language'] = 'ru'
@@ -109,6 +109,7 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         pass
     finally:
+        connection.close()
         srv.close()
         loop.run_until_complete(srv.wait_closed())
         loop.close()
