@@ -37,7 +37,7 @@ async def get_enrollment_data(request):
             try:
                 with connection.cursor() as cursor:
                     sql = "SELECT sc.id AS id, " \
-                          "sc.course_id AS course_id, " \
+                          "coc.display_name AS course_name, " \
                           "sc.created AS create_date, " \
                           "au.username AS username, " \
                           "au.first_name AS first_name, " \
@@ -45,7 +45,9 @@ async def get_enrollment_data(request):
                           "au.email AS email " \
                           "FROM student_courseenrollment AS sc " \
                           "INNER JOIN auth_user AS au " \
-                          "ON sc.user_id = au.id"
+                          "ON sc.user_id = au.id " \
+                          "INNER JOIN course_overviews_courseoverview AS coc " \
+                          "ON sc.course_id = coc.id"
                     cursor.execute(sql)
                     result = cursor.fetchall()
                     result = object_to_text(result, add_date=True)
