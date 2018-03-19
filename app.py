@@ -51,11 +51,15 @@ async def get_enrollment_data(request):
                     cursor.execute(sql)
                     result = cursor.fetchall()
                     result = object_to_text(result, replace_id=True)
-                    filename = f"{datetime.now(tz=pytz.timezone('Europe/Moscow')).strftime('%d%m%Y_%H%M')}.txt"
+                    filename = f"course_enrollment" \
+                               f"{datetime.now(tz=pytz.timezone('Europe/Moscow')).strftime('%d%m%Y_%H%M')}.txt"
                     with open(os.path.join('/data', filename), 'w') as f:
                         f.write(result)
                         f.close()
-                    return web.Response(body=open(os.path.join('/data', filename), 'rb').read())
+                    headers = {
+                        "Content-Disposition": f"attachment; filename={filename}"
+                    }
+                    return web.Response(body=open(os.path.join('/data', filename), 'rb').read(), headers=headers)
             except Exception as e:
                 web.Response(body=str(e))
 
