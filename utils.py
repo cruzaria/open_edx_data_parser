@@ -3,9 +3,17 @@ from datetime import datetime
 import pytz
 
 
-def object_to_text(arr: list, add_date=False):
+def object_to_text(arr: list, replace_id=False):
     lengths = {}
     line = ''
+    items_count_string = ''
+
+    num = 0
+    if replace_id:
+        for item in arr:    # type: dict
+            num += 1
+            item['номер'] = num
+        items_count_string = f"Количество записей: {str(num)}\n"
 
     for key in arr[0].keys():
         if key not in lengths.keys():
@@ -30,8 +38,8 @@ def object_to_text(arr: list, add_date=False):
             result = f"{result}{str(item[key])}{' ' * (lengths[key] - len(str(item[key])))}|"
         result = f"{result}\n"
 
-    if add_date:
-        result = f"{datetime.now(tz=pytz.timezone('Europe/Moscow')).strftime('%d.%m.%Y %H:%M')}\n{result}"
+    result = f"Дата: {datetime.now(tz=pytz.timezone('Europe/Moscow')).strftime('%d.%m.%Y %H:%M')}\n" \
+        f"{items_count_string}{result}"
 
     return result
 

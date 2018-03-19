@@ -36,12 +36,12 @@ async def get_enrollment_data(request):
         if request.cookies['TOKEN'] == USER_TOKEN:
             try:
                 with connection.cursor() as cursor:
-                    sql = "SELECT sc.id AS id, " \
-                          "coc.display_name AS course_name, " \
-                          "sc.created AS create_date, " \
-                          "au.username AS username, " \
-                          "au.first_name AS first_name, " \
-                          "au.last_name AS last_name, " \
+                    sql = "SELECT sc.id AS `номер`, " \
+                          "coc.display_name AS `название курса`, " \
+                          "sc.created AS `дата записи`, " \
+                          "au.username AS `логин`, " \
+                          "au.first_name AS `имя`, " \
+                          "au.last_name AS `фамилия`, " \
                           "au.email AS email " \
                           "FROM student_courseenrollment AS sc " \
                           "INNER JOIN auth_user AS au " \
@@ -50,7 +50,7 @@ async def get_enrollment_data(request):
                           "ON sc.course_id = coc.id"
                     cursor.execute(sql)
                     result = cursor.fetchall()
-                    result = object_to_text(result, add_date=True)
+                    result = object_to_text(result, replace_id=True)
                     filename = f"{datetime.now(tz=pytz.timezone('Europe/Moscow')).strftime('%d%m%Y_%H%M')}.txt"
                     with open(os.path.join('/data', filename), 'w') as f:
                         f.write(result)
