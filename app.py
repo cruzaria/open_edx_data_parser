@@ -81,17 +81,16 @@ async def get_users_data(request):
             )
             try:
                 with connection.cursor() as cursor:
-                    # sql = "SELECT au.id as id, au.username as `логин`, " \
-                    #       "au.first_name as `имя`, au.last_name as `фамилия`, " \
-                    #       "au.email as `email`, au.last_login as `последнее посещение`, " \
-                    #       "au.country as `страна`, aup.city as `город`, " \
-                    #       "au.date_of_birth as `дата рождения`, aup.language as `язык`, " \
-                    #       "aup.location as `местоположение`, aup.gender as `пол`, " \
-                    #       "aup.level_of_education as `уровень образования` " \
-                    #       "FROM auth_user as au " \
-                    #       "INNER JOIN auth_userprofile as aup " \
-                    #       "ON au.id = aup.user_id"
-                    sql = "SELECT * FROM auth_user"
+                    sql = "SELECT au.id AS id, au.username AS `логин`, " \
+                          "au.first_name AS `имя`, au.last_name AS `фамилия`, " \
+                          "au.email AS `email`, au.last_login AS `последнее посещение`, " \
+                          "aup.country AS `страна`, aup.city AS `город`, " \
+                          "aup.year_of_birth AS `дата рождения`, aup.language AS `язык`, " \
+                          "aup.location AS `местоположение`, aup.gender AS `пол`, " \
+                          "aup.level_of_education AS `уровень образования` " \
+                          "FROM auth_user AS au " \
+                          "INNER JOIN auth_userprofile AS aup " \
+                          "ON au.id = aup.user_id"
                     cursor.execute(sql)
                     result = cursor.fetchall()
                     result = object_to_text(result, replace_id=True)
