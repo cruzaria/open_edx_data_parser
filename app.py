@@ -83,7 +83,7 @@ async def get_users_data(request):
                 with connection.cursor() as cursor:
                     sql = "SELECT au.id AS `номер`, au.username AS `логин`, " \
                           "au.first_name AS `имя`, au.last_name AS `фамилия`, " \
-                          "au.date_joined AS `дата регистрации` au.email AS `email`, " \
+                          "au.date_joined AS `дата регистрации`, au.email AS `email`, " \
                           "au.last_login AS `последнее посещение`, aup.country AS `страна`, " \
                           "aup.city AS `город`, aup.year_of_birth AS `дата рождения`, " \
                           "aup.language AS `язык`, aup.location AS `местоположение`, " \
