@@ -40,13 +40,13 @@ def object_to_text(arr: list,
         if replace_none:
             for item in arr:    # type: dict
                 for key in item.keys():
-                    if item[key] == 'None' or item[key] == 'none':
+                    if item[key] is None or item[key] == 'None' or item[key] == 'none':
                         item[key] = '-'
 
-        if replace_education:
-            for item in arr:    # type: dict
-                if item['образование'] and len(str(item['образование'])) > 0:
-                    item['образование'] = EDUCATION_LEVELS[item['образование']]
+        # if replace_education:
+        #     for item in arr:    # type: dict
+        #         if item['образование'] and len(str(item['образование'])) > 0:
+        #             item['образование'] = EDUCATION_LEVELS[item['образование']]
 
         for key in arr[0].keys():
             if key not in lengths.keys():
