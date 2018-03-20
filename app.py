@@ -21,19 +21,17 @@ config = {
 }
 
 
-connection = pymysql.connect(
-    host=config['host'],
-    user=config['user'],
-    password=config['pass'],
-    db=config['db'],
-    charset='utf8',
-    cursorclass=pymysql.cursors.DictCursor
-)
-
-
 async def get_enrollment_data(request):
     if 'TOKEN' in request.cookies.keys():
         if request.cookies['TOKEN'] == USER_TOKEN:
+            connection = pymysql.connect(
+                host=config['host'],
+                user=config['user'],
+                password=config['pass'],
+                db=config['db'],
+                charset='utf8',
+                cursorclass=pymysql.cursors.DictCursor
+            )
             try:
                 with connection.cursor() as cursor:
                     sql = "SELECT sc.id AS `номер`, " \
@@ -62,6 +60,8 @@ async def get_enrollment_data(request):
                     return web.Response(body=open(os.path.join('/data', filename), 'rb').read(), headers=headers)
             except Exception as e:
                 web.Response(body=str(e))
+            finally:
+                connection.close()
 
     response = aiohttp_jinja2.render_template('login.jinja2', request, {})
     response.headers['Content-Language'] = 'ru'
@@ -115,7 +115,6 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         pass
     finally:
-        connection.close()
         srv.close()
         loop.run_until_complete(srv.wait_closed())
         loop.close()
