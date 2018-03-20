@@ -37,7 +37,7 @@ def object_to_text(arr: list,
             for item in arr:    # type: dict
                 item['пол'] = 'М' if item['пол'] == 'm' \
                     else 'Ж' if item['пол'] == 'f' \
-                    else 'Др.' if item['пол'] == 'l' else '-'
+                    else 'др.' if item['пол'] == 'l' or item['пол'] == 'o' else '-'
 
         if replace_none:
             for item in arr:    # type: dict
