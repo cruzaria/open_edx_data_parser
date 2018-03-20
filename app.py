@@ -83,11 +83,11 @@ async def get_users_data(request):
                 with connection.cursor() as cursor:
                     sql = "SELECT au.id AS `номер`, au.username AS `логин`, " \
                           "au.first_name AS `имя`, au.last_name AS `фамилия`, " \
-                          "au.email AS `email`, au.last_login AS `последнее посещение`, " \
-                          "aup.country AS `страна`, aup.city AS `город`, " \
-                          "aup.year_of_birth AS `дата рождения`, aup.language AS `язык`, " \
-                          "aup.location AS `местоположение`, aup.gender AS `пол`, " \
-                          "aup.level_of_education AS `образование` " \
+                          "au.date_joined AS `дата регистрации` au.email AS `email`, " \
+                          "au.last_login AS `последнее посещение`, aup.country AS `страна`, " \
+                          "aup.city AS `город`, aup.year_of_birth AS `дата рождения`, " \
+                          "aup.language AS `язык`, aup.location AS `местоположение`, " \
+                          "aup.gender AS `пол`, aup.level_of_education AS `образование` " \
                           "FROM auth_user AS au " \
                           "INNER JOIN auth_userprofile AS aup " \
                           "ON au.id = aup.user_id"
