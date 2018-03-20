@@ -68,6 +68,54 @@ async def get_enrollment_data(request):
     return response
 
 
+async def get_users_data(request):
+    if 'TOKEN' in request.cookies.keys():
+        if request.cookies['TOKEN'] == USER_TOKEN:
+            connection = pymysql.connect(
+                host=config['host'],
+                user=config['user'],
+                password=config['pass'],
+                db=config['db'],
+                charset='utf8',
+                cursorclass=pymysql.cursors.DictCursor
+            )
+            try:
+                with connection.cursor() as cursor:
+                    sql = """
+                        SELECT au.id as id, au.username as `логин`,
+                        au.first_name as `имя`, au.last_name as `фамилия`,
+                        au.email as `email`, au.last_login as `последнее посещение`,
+                        au.country as `страна`, aup.city as `город`,
+                        au.date_of_birth as `дата рождения`, aup.language as `язык`,
+                        aup.location as `местоположение`, aup.gender as `пол`,
+                        aup.level_of_education as `уровень образования`
+                        FROM auth_user as au
+                        INNER JOIN auth_userprofile as aup
+                        ON au.id = aup.user_id
+                        
+                        """
+                    cursor.execute(sql)
+                    result = cursor.fetchall()
+                    result = object_to_text(result, replace_id=True)
+                    filename = f"users" \
+                               f"{datetime.now(tz=pytz.timezone('Europe/Moscow')).strftime('%d%m%Y_%H%M')}.txt"
+                    with open(os.path.join('/data', filename), 'w') as f:
+                        f.write(result)
+                        f.close()
+                    headers = {
+                        "Content-Disposition": f"attachment; filename={filename}"
+                    }
+                    return web.Response(body=open(os.path.join('/data', filename), 'rb').read(), headers=headers)
+            except Exception as e:
+                web.Response(body=str(e))
+            finally:
+                connection.close()
+
+    response = aiohttp_jinja2.render_template('login.jinja2', request, {})
+    response.headers['Content-Language'] = 'ru'
+    return response
+
+
 async def authorization(request: web.Request):
     json = await request.json()
     token = json['token']
@@ -98,6 +146,7 @@ def app(l=None):
     app.router.add_get('/', admin_panel)
     app.router.add_post('/auth', authorization)
     app.router.add_get('/admin/enrollment_data', get_enrollment_data)
+    app.router.add_get('/admin/users', get_users_data)
 
     return app
 
