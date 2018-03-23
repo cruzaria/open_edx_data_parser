@@ -65,12 +65,19 @@ async def get_enrollment_data_graph(request: web.Request):
         if request.cookies['TOKEN'] == config.USER_TOKEN:
             success, data = sql.get_course_enrollments()
             if success:
-                result = graph.render_course_enrollments(data=data)
+                filename = graph.render_course_enrollments(data=data)
+                headers = {
+                    "Content-Disposition": f"attachment; filename={filename}"
+                }
                 return web.Response(
-                    body=str(utils.html_image_wrapper(result)).encode('utf-8'),
-                    content_type='text/HTML',
-                    charset='utf-8'
+                    body=open(os.path.join('/data', filename), 'rb').read(),
+                    headers=headers
                 )
+                # return web.Response(
+                #     body=str(utils.html_image_wrapper(result)).encode('utf-8'),
+                #     content_type='text/HTML',
+                #     charset='utf-8'
+                # )
             else:
                 return web.Response(body=str(data))
 
