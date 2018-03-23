@@ -66,7 +66,7 @@ async def get_enrollment_data_graph(request: web.Request):
             success, data = sql.get_course_enrollments()
             if success:
                 result = graph.render_course_enrollments(data=data)
-                return web.Response(text=utils.html_image_wrapper(result))
+                return web.Response(body=utils.html_image_wrapper(result), content_type='text/HTML')
             else:
                 return web.Response(body=str(data))
 
