@@ -88,3 +88,18 @@ def random_token(len: int):
     for num in range(len):
         token = f"{token}{dictionary[random.randrange(0, 62, 1)]}"
     return token
+
+
+def html_image_wrapper(image):
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Graph</title>
+    </head>
+    <body>
+        {image}
+    </body>
+    </html>
+    """
+    return html
