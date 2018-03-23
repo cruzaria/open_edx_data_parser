@@ -22,8 +22,7 @@ def render_course_enrollments(data: list):
             if item['y'] == course:
                 item['x'] += 1
 
-    items = zip(*[iter(items)]*10)
-    items = [list(item) for item in zip(items)]
+    items = [s[d:d+10] for d in range(0, len(items), 10)]
 
     def x(row, index):
         return row['x']
