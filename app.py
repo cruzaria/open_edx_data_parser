@@ -13,6 +13,7 @@ def app(l=None):
     app.router.add_get('/', api.admin_panel)
     app.router.add_post('/auth', api.authorization)
     app.router.add_get('/admin/enrollment_data', api.get_enrollment_data)
+    app.router.add_get('/admin/enrollment_data/graph', api.get_enrollment_data_graph)
     app.router.add_get('/admin/users', api.get_users_data)
 
     return app

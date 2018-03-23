@@ -1,12 +1,14 @@
 import pymysql
 
+from config import config
 
-def get_course_enrollments(config: dict):
+
+def get_course_enrollments():
     connection = pymysql.connect(
-        host=config['host'],
-        user=config['user'],
-        password=config['pass'],
-        db=config['db'],
+        host=config.envs['host'],
+        user=config.envs['user'],
+        password=config.envs['pass'],
+        db=config.envs['db'],
         charset='utf8',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -34,12 +36,12 @@ def get_course_enrollments(config: dict):
         connection.close()
 
 
-def get_user_data(config: dict):
+def get_user_data():
     connection = pymysql.connect(
-        host=config['host'],
-        user=config['user'],
-        password=config['pass'],
-        db=config['db'],
+        host=config.envs['host'],
+        user=config.envs['user'],
+        password=config.envs['pass'],
+        db=config.envs['db'],
         charset='utf8',
         cursorclass=pymysql.cursors.DictCursor
     )

@@ -7,12 +7,13 @@ import pytz
 from web import utils
 from config import config
 from sql import sql
+from graph import graph
 
 
 async def get_enrollment_data(request):
     if 'TOKEN' in request.cookies.keys():
         if request.cookies['TOKEN'] == config.USER_TOKEN:
-            success, result = sql.get_course_enrollments(config=config.envs)
+            success, result = sql.get_course_enrollments()
             if success:
                 result = utils.object_to_text(result, replace_id=True)
                 filename = f"course_enrollment" \
@@ -35,7 +36,7 @@ async def get_enrollment_data(request):
 async def get_users_data(request):
     if 'TOKEN' in request.cookies.keys():
         if request.cookies['TOKEN'] == config.USER_TOKEN:
-            success, result = sql.get_user_data(config=config.envs)
+            success, result = sql.get_user_data()
             if success:
                 result = utils.object_to_text(result,
                                               replace_id=True,
@@ -53,6 +54,21 @@ async def get_users_data(request):
                 return web.Response(body=open(os.path.join('/data', filename), 'rb').read(), headers=headers)
             else:
                 return web.Response(body=str(result))
+
+    response = aiohttp_jinja2.render_template('login.jinja2', request, {})
+    response.headers['Content-Language'] = 'ru'
+    return response
+
+
+async def get_enrollment_data_graph(request: web.Request):
+    if 'TOKEN' in request.cookies.keys():
+        if request.cookies['TOKEN'] == config.USER_TOKEN:
+            success, data = sql.get_course_enrollments()
+            if success:
+                result = graph.render_course_enrollments(data=data)
+                return web.Response(body=result)
+            else:
+                return web.Response(body=str(data))
 
     response = aiohttp_jinja2.render_template('login.jinja2', request, {})
     response.headers['Content-Language'] = 'ru'
