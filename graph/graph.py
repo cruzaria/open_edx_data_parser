@@ -6,31 +6,15 @@ import pytz
 def render_course_enrollments(data: list):
     items = []
 
-    for i in range(len(data)):
-        if i == 0:
-            items.append({
-                'y': data[i]['название курса'],
-                'x': 1
-            })
-        else:
-            for item in items:
-                if item['y'] == data[i]['название курса']:
-                    item['x'] += 1
-                else:
-                    items.append({
-                        'y': data[i]['название курса'],
-                        'x': 1
-                    })
-
-    # for d in data:
-    #     for item in items:
-    #         if item['y'] == d['название курса']:
-    #             item['x'] += 1
-    #         else:
-    #             items.append({
-    #                 'y': d['название курса'],
-    #                 'x': 1
-    #             })
+    for d in data:
+        for item in items:
+            if len(items) != 0 and item['y'] == d['название курса']:
+                item['x'] += 1
+            else:
+                items.append({
+                    'y': d['название курса'],
+                    'x': 1
+                })
         # if item['название курса'] not in items.keys():
         #     items[item['название курса']] = 1
         # else:
