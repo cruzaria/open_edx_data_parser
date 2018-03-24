@@ -97,7 +97,7 @@ async def download_enrollment_data_graph(request: web.Request):
                     write_to=f'/data/{pngfilename}'
                 )
                 return web.Response(
-                    body=bytes(str(pngfile)),
+                    body=bytes(str(pngfile).encode('utf-8')),
                     headers=headers
                 )
 
