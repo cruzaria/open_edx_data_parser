@@ -96,7 +96,7 @@ def html_image_wrapper(image):
     <html>
     <head>
         <meta charset="utf-8">
-        <title>Graph</title>
+        <title>Графики</title>
     </head>
     <body>
         {image}

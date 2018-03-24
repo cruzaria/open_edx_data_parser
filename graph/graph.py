@@ -44,22 +44,3 @@ def render_course_enrollments(data: list):
     chart_grid.to_svg(f'/data/{filename}')
 
     return filename
-
-
-
-# import leather
-#
-# data = [
-#         {'x': 10, 'q': {'y': ['One']}},
-#         {'x': 7, 'q': {'y': ['Two']}}
-# ]
-#
-# def x(row, index):
-#     return row['x']
-#
-# def y(row, index):
-#     return row['q']['y'][0]
-#
-# chart = leather.Chart('Data')
-# chart.add_bars(data, x=x, y=y)
-# chart.to_svg('./testsvg.svg')

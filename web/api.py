@@ -3,6 +3,7 @@ from datetime import datetime
 import aiohttp_jinja2
 import os
 import pytz
+from cairosvg import svg2png
 
 from web import utils
 from config import config
@@ -66,13 +67,6 @@ async def get_enrollment_data_graph(request: web.Request):
             success, data = sql.get_course_enrollments()
             if success:
                 filename = graph.render_course_enrollments(data=data)
-                # headers = {
-                #     "Content-Disposition": f"attachment; filename={filename}"
-                # }
-                # return web.Response(
-                #     body=open(os.path.join('/data', filename), 'rb').read(),
-                #     headers=headers
-                # )
                 return web.Response(
                     body=str(
                         utils.html_image_wrapper(open(os.path.join('/data', filename), 'r').read())
@@ -82,6 +76,30 @@ async def get_enrollment_data_graph(request: web.Request):
                 )
             else:
                 return web.Response(body=str(data))
+
+    response = aiohttp_jinja2.render_template('login.jinja2', request, {})
+    response.headers['Content-Language'] = 'ru'
+    return response
+
+
+async def download_enrollment_data_graph(request: web.Request):
+    if 'TOKEN' in request.cookies.keys():
+        if request.cookies['TOKEN'] == config.USER_TOKEN:
+            success, data = sql.get_course_enrollments()
+            if success:
+                filename = graph.render_course_enrollments(data=data)
+                pngfilename = filename.replace('.svg', '.png')
+                headers = {
+                    "Content-Disposition": f"attachment; filename={pngfilename}"
+                }
+                pngfile = svg2png(
+                    bytestring=open(os.path.join('/data', filename), 'r').read(),
+                    write_to=f'/data/{pngfilename}'
+                )
+                return web.Response(
+                    body=bytes(str(pngfile)),
+                    headers=headers
+                )
 
     response = aiohttp_jinja2.render_template('login.jinja2', request, {})
     response.headers['Content-Language'] = 'ru'
