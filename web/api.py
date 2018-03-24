@@ -75,10 +75,7 @@ async def get_enrollment_data_graph(request: web.Request):
                 # )
                 return web.Response(
                     body=str(
-                        utils.html_image_wrapper(
-                            os.path.join('/data', filename),
-                            'r'
-                        ).read()
+                        utils.html_image_wrapper(open(os.path.join('/data', filename), 'r').read())
                     ).encode('utf-8'),
                     content_type='text/HTML',
                     charset='utf-8'
