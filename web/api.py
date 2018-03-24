@@ -82,28 +82,28 @@ async def get_enrollment_data_graph(request: web.Request):
     return response
 
 
-async def download_enrollment_data_graph(request: web.Request):
-    if 'TOKEN' in request.cookies.keys():
-        if request.cookies['TOKEN'] == config.USER_TOKEN:
-            success, data = sql.get_course_enrollments()
-            if success:
-                filename = graph.render_course_enrollments(data=data)
-                pngfilename = filename.replace('.svg', '.png')
-                headers = {
-                    "Content-Disposition": f"attachment; filename={pngfilename}"
-                }
-                pngfile = svg2png(
-                    bytestring=open(os.path.join('/data', filename), 'r').read(),
-                    write_to=f'/data/{pngfilename}'
-                )
-                return web.Response(
-                    body=bytes(str(pngfile).encode('utf-8')),
-                    headers=headers
-                )
-
-    response = aiohttp_jinja2.render_template('login.jinja2', request, {})
-    response.headers['Content-Language'] = 'ru'
-    return response
+# async def download_enrollment_data_graph(request: web.Request):
+#     if 'TOKEN' in request.cookies.keys():
+#         if request.cookies['TOKEN'] == config.USER_TOKEN:
+#             success, data = sql.get_course_enrollments()
+#             if success:
+#                 filename = graph.render_course_enrollments(data=data)
+#                 pngfilename = filename.replace('.svg', '.png')
+#                 headers = {
+#                     "Content-Disposition": f"attachment; filename={pngfilename}"
+#                 }
+#                 pngfile = svg2png(
+#                     bytestring=open(os.path.join('/data', filename), 'r').read(),
+#                     write_to=f'/data/{pngfilename}'
+#                 )
+#                 return web.Response(
+#                     body=bytes(str(pngfile).encode('utf-8')),
+#                     headers=headers
+#                 )
+#
+#     response = aiohttp_jinja2.render_template('login.jinja2', request, {})
+#     response.headers['Content-Language'] = 'ru'
+#     return response
 
 
 async def authorization(request: web.Request):
