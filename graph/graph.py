@@ -38,15 +38,11 @@ def render_course_enrollments(data: list):
         charts[-1].add_bars(item, x=x, y=y)
         chart_grid.add_one(charts[-1])
 
-    # chart = leather.Chart('Записи на курсы')
-    # chart.add_bars(items, x=x, y=y)
-
     filename = f"enrollments_graph_" \
                f"{datetime.now(tz=pytz.timezone('Europe/Moscow')).strftime('%d%m%Y_%H%M')}.svg"
 
     chart_grid.to_svg(f'/data/{filename}')
 
-    # chart.to_svg(f'/data/{filename}')
     return filename
 
 
